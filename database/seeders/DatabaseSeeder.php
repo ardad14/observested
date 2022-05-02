@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Client;
+use App\Models\Customer;
 use App\Models\ClientPlaces;
 use App\Models\Place;
 use App\Models\Product;
@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             ->count(10)
             ->create();
 
-        Client::factory()
+        Customer::factory()
             ->count(150)
             ->create();
 
