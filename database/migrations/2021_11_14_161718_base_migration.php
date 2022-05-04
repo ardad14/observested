@@ -64,13 +64,13 @@ class BaseMigration extends Migration
         */
 
         /**
-         * Foreign keys clients_places
+         * Foreign keys customers_places
          */
         Schema::table('customers_places', function (Blueprint $table) {
             $table->after('id', function ($table) {
-                $table->foreignId('customer_id')->constrained('customerss')->onDelete('cascade');
+                $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             });
-            $table->after('customers_id', function ($table) {
+            $table->after('customer_id', function ($table) {
                 $table->foreignId('place_id')->constrained('places')->onDelete('cascade');
             });
         });
@@ -87,8 +87,8 @@ class BaseMigration extends Migration
             $table->dropForeign(['place_id']);
         });
 
-        Schema::table('clients_places', function(Blueprint $table) {
-            $table->dropForeign(['client_id', 'place_id']);
+        Schema::table('customers_places', function(Blueprint $table) {
+            $table->dropForeign(['customer_id', 'place_id']);
         });
 
         Schema::drop('users');
