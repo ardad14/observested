@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Models\Client;
+use App\Models\Customer;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PlaceController;
@@ -23,81 +23,69 @@ use App\Services\ClientService;
 | contains the "web" middleware group. Now create something great!
 |
 */
+/*Route::get('/', fn() => view('main'));
 
-/*
-|--------------------------------------------------------------------------
-| Analytics Routes
-|--------------------------------------------------------------------------
-*/
+Route::group(['prefix' => 'analytics'], function () {
+    Route::get('/general', fn() => view('analyticsGeneral', [
+        'actions' => AnalyticsService::getAllActionsForPlace(),
+    ]));
 
-Route::get('/', fn() => view('main'));
+    Route::get('/month', fn() => view('analyticsMonth', [
+        'actions' => AnalyticsService::getAllActionsForPlace(),
+    ]));
 
-Route::get('/analytics/general', fn() => view('analyticsGeneral', [
-    'actions' => AnalyticsService::getAllActionsForPlace(),
-]));
+    Route::get('/clients', fn() => view('analyticsClients', [
+        'actions' => AnalyticsService::getAllActionsForPlace(),
+    ]));
 
-Route::get('/analytics/month', fn() => view('analyticsMonth', [
-    'actions' => AnalyticsService::getAllActionsForPlace(),
-]));
+    Route::get('/goods', fn() => view('analyticsGoods', [
+        'actions' => AnalyticsService::getAllProductsForPlace(),
+    ]));
+});
 
-Route::get('/analytics/clients', fn() => view('analyticsClients', [
-    'actions' => AnalyticsService::getAllActionsForPlace(),
-]));
-
-Route::get('/analytics/goods', fn() => view('analyticsGoods', [
-    'actions' => AnalyticsService::getAllProductsForPlace(),
-]));
-
-
-Route::get('/clients', fn() => view('clients' , [
-    'clients' => ClientService::getClientsForPlace(),
-]));
-
-Route::get('/editClient/{id}', fn($id) => view('editClient' , [
-    'client' => Client::find($id),
-]));
 
 Route::post(
     '/editClientService/{id}',
     [ClientController::class, 'editClient']
 );
 
-Route::get('/workers', fn() => view('workers', [
-    'workers' => UserService::getWorkersForPlace()
-]));
-
-Route::get('/addWorker', fn() => view('addWorker'));
-
 Route::post(
     '/addWorkerService',
     [UserController::class, 'addWorker']
 );
 
-Route::get('/createPlace', fn() => view('createPlace'));
 
 Route::post(
     '/createPlaceService',
     [PlaceController::class, 'createPlace']
 );
 
+//TODO: OB-6
+Route::group(['prefix' => 'view'], function () {
+    Route::get('/signUp', fn() => view('signUp'));
+    Route::get('/signIn', fn() => view('signIn', [
+        'allPlaces' => PlaceService::getAllPlaces()
+    ]));
+    Route::get('/createPlace', fn() => view('createPlace'));
+    Route::get('/clients', fn() => view('clients' , [
+        'clients' => ClientService::getClientsForPlace(),
+    ]));
 
+    Route::get('/editClient/{id}', fn($id) => view('editClient' , [
+        'client' => Customer::find($id),
+    ]));
+    Route::get('/workers', fn() => view('workers', [
+        'workers' => UserService::getWorkersForPlace()
+    ]));
 
-/*
-|--------------------------------------------------------------------------
-| Users Routes
-|--------------------------------------------------------------------------
-*/
+    Route::get('/addWorker', fn() => view('addWorker'));
+});
 
-Route::get('/signUp', fn() => view('signUp'));
-
+//TODO: OB-1
 Route::post(
     '/signUpService',
     [UserController::class, 'signUp']
 )->name('signUp');
-
-Route::get('/signIn', fn() => view('signIn', [
-    'allPlaces' => PlaceService::getAllPlaces()
-]));
 
 Route::post(
     '/signInService',
@@ -107,4 +95,4 @@ Route::post(
 Route::get(
     '/logOut',
     [UserController::class, 'logOut']
-)->name('logOut');
+)->name('logOut');*/

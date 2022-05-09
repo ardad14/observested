@@ -2,12 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Client;
-use App\Models\ClientPlaces;
+use App\Models\Customer;
 use App\Models\Place;
 use App\Models\Product;
 use App\Models\User;
-use App\Models\UserPlaces;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,29 +17,40 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        /*Place::factory()
-            ->count(10)
-            ->create();*/
-
-
-        /*User::factory()
+        Place::factory()
             ->count(10)
             ->create();
 
-        Client::factory()
+        User::factory()
+            ->count(10)
+            ->create();
+
+        Customer::factory()
             ->count(150)
             ->create();
-
-        ClientPlaces::factory()
-            ->count(500)
-            ->create();
-
-        UserPlaces::factory()
-            ->count(12)
-            ->create();*/
 
         Product::factory()
             ->count(80)
             ->create();
+
+        $customers = Customer::all();
+        $users = User::all();
+        $places = Place::all();
+
+        //Generate customers_places relation table
+        $customers->each(function ($customer) use ($places) {
+            $customer->places()->attach(
+                $places->random(rand(1, 10))->pluck('id')->toArray(),
+                ['spend_money' => rand(100, 10000)]
+            );
+        });
+
+        //Generate users_places relation table
+        $users->each(function ($user) use ($places) {
+            $user->places()->attach(
+                $places->random(rand(1, 10))->pluck('id')->toArray(),
+                ['role' => $user->role]
+            );
+        });
     }
 }

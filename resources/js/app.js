@@ -168,6 +168,6 @@ const navbar = new Vue({
     el: '#navbar',
 })
 
-if(localStorage.getItem('locale') !== null) {
+if(localStorage.getItem(' ') !== null) {
     i18n.locale = localStorage.getItem('locale');
 }

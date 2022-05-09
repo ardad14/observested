@@ -4,17 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Auth\Authenticatable as AuthenticableTrait;
 
-class User extends Model
+class User extends Model implements Authenticatable
 {
-    use HasFactory, Notifiable;
+    use AuthenticableTrait, HasApiTokens, HasFactory;
 
-    private $name;
-    private $surname;
-    private $email;
-    private $password;
-    private $role;
+    protected $fillable = [
+        'name',
+        'surname',
+        'email',
+        'password',
+        'role',
+    ];
 
-    protected $table = 'users';
+    protected $hidden = [
+        'password'
+    ];
+
+    public function places(): BelongsToMany
+    {
+        return $this->belongsToMany(Place::class, 'users_places');
+    }
 }

@@ -1,6 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Analytics\AnalyticsController;
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\LogoutController;
+use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +16,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'analytics', 'middleware' => 'auth:api'], function () {
+    Route::get('/general', [AnalyticsController::class, 'showGeneral']);
 });
+
+
+Route::post('/register', RegisterController::class);
+Route::post('/login', LoginController::class);
+Route::post('/logout', LogoutController::class)->middleware('auth:api');

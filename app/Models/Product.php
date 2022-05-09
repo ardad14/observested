@@ -4,15 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
     use HasFactory;
 
-    private $name;
-    private $purchase;
-    private $price;
-    private $available_amount;
-    private $sold;
-    private $place_id;
+    protected $fillable = [
+        'name',
+        'purchase',
+        'price',
+        'availableAmount',
+        'sold',
+    ];
+
+    /**
+     * @return HasOne
+     */
+    public function place():hasOne {
+        return $this->hasOne(Place::class);
+    }
 }

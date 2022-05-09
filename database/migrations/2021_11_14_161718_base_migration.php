@@ -40,7 +40,7 @@ class BaseMigration extends Migration
             $table->dateTime('updated_at')->nullable()->useCurrentOnUpdate();
         });
 
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->string('name');
             $table->string('surname');
@@ -49,7 +49,7 @@ class BaseMigration extends Migration
             $table->dateTime('updated_at')->nullable()->useCurrentOnUpdate();
         });
 
-        Schema::create('clients_places', function (Blueprint $table) {
+        Schema::create('customers_places', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->float('spend_money');
             $table->dateTime('created_at')->useCurrent();
@@ -64,13 +64,13 @@ class BaseMigration extends Migration
         */
 
         /**
-         * Foreign keys clients_places
+         * Foreign keys customers_places
          */
-        Schema::table('clients_places', function (Blueprint $table) {
+        Schema::table('customers_places', function (Blueprint $table) {
             $table->after('id', function ($table) {
-                $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
+                $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             });
-            $table->after('client_id', function ($table) {
+            $table->after('customer_id', function ($table) {
                 $table->foreignId('place_id')->constrained('places')->onDelete('cascade');
             });
         });
@@ -87,14 +87,14 @@ class BaseMigration extends Migration
             $table->dropForeign(['place_id']);
         });
 
-        Schema::table('clients_places', function(Blueprint $table) {
-            $table->dropForeign(['client_id', 'place_id']);
+        Schema::table('customers_places', function(Blueprint $table) {
+            $table->dropForeign(['customer_id', 'place_id']);
         });
 
         Schema::drop('users');
         Schema::drop('places');
-        Schema::drop('clients');
-        Schema::drop('clients_places');
+        Schema::drop('customers');
+        Schema::drop('customers_places');
 
     }
 }
