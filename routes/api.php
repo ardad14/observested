@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Analytics\AnalyticsController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::group(['prefix' => 'analytics', 'middleware' => 'auth:api'], function () {
-    Route::get('/clients', );
+    Route::get('/general', [AnalyticsController::class, 'showGeneral']);
 });
 
 

@@ -12,7 +12,8 @@ class Customer extends Model
 
     protected $fillable = [
         'name',
-        'age'
+        'surname',
+        'age',
     ];
 
     /**
@@ -20,6 +21,6 @@ class Customer extends Model
      */
     public function places(): BelongsToMany
     {
-        return $this->belongsToMany(Place::class);
+        return $this->belongsToMany(Place::class, 'customers_places')->withPivot('spend_money');
     }
 }

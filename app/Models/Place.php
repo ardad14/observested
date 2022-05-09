@@ -15,15 +15,23 @@ class Place extends Model
         'name',
         'address',
         'workingHoursStart',
-        'workingHoursEnd'
+        'workingHoursEnd',
     ];
+
+    /**
+     * @return BelongsToMany
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'users_places');
+    }
 
     /**
      * @return BelongsToMany
      */
     public function customers(): BelongsToMany
     {
-        return $this->belongsToMany(Customer::class);
+        return $this->belongsToMany(Customer::class, 'customers_places')->withPivot('spend_money');
     }
 
     /**
