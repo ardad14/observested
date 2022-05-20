@@ -31,7 +31,7 @@ class Place extends Model
      */
     public function customers(): BelongsToMany
     {
-        return $this->belongsToMany(Customer::class, 'customers_places')->withPivot('spend_money');
+        return $this->belongsToMany(Customer::class, 'customers_places')->withPivot(['spend_money', 'created_at']);
     }
 
     /**

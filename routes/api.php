@@ -1,9 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Analytics\AnalyticsController;
-use App\Http\Controllers\Api\Auth\LoginController;
-use App\Http\Controllers\Api\Auth\LogoutController;
-use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group(['prefix' => 'analytics', 'middleware' => 'auth:api'], function () {
     Route::get('/general', [AnalyticsController::class, 'showGeneral']);
+    Route::get('/products', [AnalyticsController::class, 'getAllProductsForPlace']);
 });
 
-
-Route::post('/register', RegisterController::class);
-Route::post('/login', LoginController::class);
-Route::post('/logout', LogoutController::class)->middleware('auth:api');
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
