@@ -18,7 +18,7 @@ class AnalyticsController extends Controller
     {
         $admin = Auth::user();
 
-        $place = Place::whereHas('users', function($q) use($admin) {
+        $place = Place::whereHas('users', function ($q) use ($admin) {
             $q->where('user_id', $admin['id']);
         })->first();
 
@@ -39,7 +39,7 @@ class AnalyticsController extends Controller
     {
         $admin = Auth::user();
 
-        $place = Place::whereHas('users', function($q) use($admin) {
+        $place = Place::whereHas('users', function ($q) use ($admin) {
             $q->where('user_id', $admin['id']);
         })->first();
 

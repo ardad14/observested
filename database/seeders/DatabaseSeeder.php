@@ -7,6 +7,7 @@ use App\Models\Place;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -41,7 +42,10 @@ class DatabaseSeeder extends Seeder
         $customers->each(function ($customer) use ($places) {
             $customer->places()->attach(
                 $places->random(rand(1, 10))->pluck('id')->toArray(),
-                ['spend_money' => rand(100, 10000)]
+                [
+                    'spend_money' => rand(100, 10000),
+                    'created_at' => Carbon::today()->subDays(rand(0, 365)),
+                ]
             );
         });
 
