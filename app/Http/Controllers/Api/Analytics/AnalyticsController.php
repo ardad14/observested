@@ -14,13 +14,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AnalyticsController extends Controller
 {
-    public function showGeneral(Request $request): JsonResponse
+    public function showGeneral(int $id): JsonResponse
     {
         $admin = Auth::user();
 
-        $place = Place::whereHas('users', function ($q) use ($admin) {
+        $place = Place::findOrFail($id);
+
+        /*$place = Place::whereHas('users', function ($q) use ($admin) {
             $q->where('user_id', $admin['id']);
-        })->first();
+        })->first();*/
 
         $allActions = Place::select('*')
             ->where('id', $place->id)
@@ -35,7 +37,7 @@ class AnalyticsController extends Controller
         );
     }
 
-    public function getAllProductsForPlace(): JsonResponse
+    public function getAllProductsForPlace(int $id): JsonResponse
     {
         $admin = Auth::user();
 

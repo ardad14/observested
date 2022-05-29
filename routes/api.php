@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Analytics\AnalyticsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\PlaceController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,12 +18,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::group(['prefix' => 'analytics', 'middleware' => 'auth:api'], function () {
-    Route::get('/general', [AnalyticsController::class, 'showGeneral']);
-    Route::get('/products', [AnalyticsController::class, 'getAllProductsForPlace']);
+    Route::get('/general/{id}', [AnalyticsController::class, 'showGeneral']);
+    Route::get('/products/{id}', [AnalyticsController::class, 'getAllProductsForPlace']);
 });
 
 Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function () {
-    Route::get('/place', [UserController::class, 'usersForPlace']);
+    Route::get('/place', [UserController::class, 'getUsersForPlace']);
+});
+
+Route::group(['prefix' => 'place', 'middleware' => 'auth:api'], function () {
+    Route::get('/places', [PlaceController::class, 'getPlacesForUser']);
+    Route::get('/first', [PlaceController::class, 'getFirstPlaceForUser']);
+    Route::get('/show/{id}', [PlaceController::class, 'show']);
+    Route::post('', [PlaceController::class, 'store']);
+    Route::put('/{id}', [PlaceController::class, 'update']);
 });
 
 Route::group(['prefix' => 'customers', 'middleware' => 'auth:api'], function () {

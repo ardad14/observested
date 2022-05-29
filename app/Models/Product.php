@@ -21,7 +21,8 @@ class Product extends Model
     /**
      * @return HasOne
      */
-    public function place():hasOne {
+    public function place(): HasOne
+    {
         return $this->hasOne(Place::class);
     }
 }

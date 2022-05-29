@@ -14,8 +14,8 @@ class Place extends Model
     protected $fillable = [
         'name',
         'address',
-        'workingHoursStart',
-        'workingHoursEnd',
+        'working_hours_start',
+        'working_hours_end',
     ];
 
     /**

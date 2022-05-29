@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
-    public function usersForPlace(): JsonResponse
+    public function getUsersForPlace(): JsonResponse
     {
         $admin = Auth::user();
 
