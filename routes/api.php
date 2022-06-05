@@ -29,9 +29,10 @@ Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function () {
 Route::group(['prefix' => 'place', 'middleware' => 'auth:api'], function () {
     Route::get('/places', [PlaceController::class, 'getPlacesForUser']);
     Route::get('/first', [PlaceController::class, 'getFirstPlaceForUser']);
-    Route::get('/show/{id}', [PlaceController::class, 'show']);
-    Route::post('', [PlaceController::class, 'store']);
-    Route::put('/{id}', [PlaceController::class, 'update']);
+    Route::get('/show/{place}', [PlaceController::class, 'show']);
+    Route::post('/', [PlaceController::class, 'store']);
+    Route::put('/{place}', [PlaceController::class, 'update']);
+    Route::delete('/{place}', [PlaceController::class, 'delete']);
 });
 
 Route::group(['prefix' => 'customers', 'middleware' => 'auth:api'], function () {

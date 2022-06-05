@@ -4,27 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Place;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class PlaceController extends Controller
 {
-    public function show(int $id): JsonResponse
+    public function show(Place $place): Response
     {
-        $place = Place::findOrFail($id);
-
-        return response()->json(
-            [
-                "place" => $place
-            ],
-            Response::HTTP_OK
-        );
+        return response(["place" => $place]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request): Response
     {
         $user = Auth::user();
 
@@ -36,27 +27,22 @@ class PlaceController extends Controller
             ]
         );
 
-        return response()->json(
-            [
-                "created" => true
-            ],
-            Response::HTTP_OK
-        );
+        return response(["created" => true]);
     }
 
-    public function update(Request $request, int $id): JsonResponse
+    public function update(Request $request, Place $place): Response
     {
-        Place::whereId($id)->update($request->all());
-
-        return response()->json(
-            [
-                "updated" => true
-            ],
-            Response::HTTP_OK
-        );
+        $place->update($request->all());
+        return response(["updated" => true]);
     }
 
-    public function getPlacesForUser(): JsonResponse
+    public function delete(Place $place): Response
+    {
+        Place::destroy($place->id);
+        return response(['delete' => true]);
+    }
+
+    public function getPlacesForUser(): Response
     {
         $user = Auth::user();
 
@@ -64,15 +50,10 @@ class PlaceController extends Controller
             $q->where('user_id', $user['id']);
         })->get();
 
-        return response()->json(
-            [
-                "places" => $places
-            ],
-            Response::HTTP_OK
-        );
+        return response(["places" => $places]);
     }
 
-    public function getFirstPlaceForUser(): JsonResponse
+    public function getFirstPlaceForUser(): Response
     {
         $user = Auth::user();
 
@@ -80,11 +61,6 @@ class PlaceController extends Controller
             $q->where('user_id', $user['id']);
         })->first();
 
-        return response()->json(
-            [
-                "place" => $place
-            ],
-            Response::HTTP_OK
-        );
+        return response(["place" => $place]);
     }
 }
