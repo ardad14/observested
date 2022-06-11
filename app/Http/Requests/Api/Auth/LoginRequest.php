@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateDocumentRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class CreateDocumentRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required | min: 4',
-            'description' => '',
-            'url' => 'required | url'
+            'email' => 'required | email',
+            'password' => 'required | string'
         ];
     }
 }

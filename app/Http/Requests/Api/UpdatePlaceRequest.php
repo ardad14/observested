@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCardRequest extends FormRequest
+class UpdatePlaceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,13 +21,13 @@ class CreateCardRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'name' => 'required | min: 4',
-            'description' => '',
-            'category' => 'required',
-            'deadline' => 'required | date'
+            'name' => 'required | string',
+            'address' => 'required | string',
+            'working_hours_start' => 'required',
+            'working_hours_end' => 'required',
         ];
     }
 }

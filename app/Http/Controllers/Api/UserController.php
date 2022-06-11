@@ -32,24 +32,4 @@ class UserController extends Controller
             Response::HTTP_OK
         );
     }
-
-    /*public static function addWorker(Request $request)
-    {
-        $userByEmail = User::where('email', $request['email'])->first();
-        $admin = User::find(session()->get('userId'));
-        $place = DB::table('users_places')
-            ->where('user_id', $admin->id)
-            ->first();
-
-        if ($userByEmail !== null) {
-            DB::table("users_places")->insert([
-                'user_id' => $userByEmail->id,
-                'place_id' => $place->place_id,
-                'role' => $request['role']
-            ]);
-
-        }
-        header('location: /workers');
-        return true;
-    }*/
 }

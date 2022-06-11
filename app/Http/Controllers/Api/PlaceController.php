@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\CreatePlaceRequest;
+use App\Http\Requests\Api\UpdatePlaceRequest;
 use App\Models\Place;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +17,7 @@ class PlaceController extends Controller
         return response(["place" => $place]);
     }
 
-    public function store(Request $request): Response
+    public function store(CreatePlaceRequest $request): Response
     {
         $user = Auth::user();
 
@@ -30,7 +32,7 @@ class PlaceController extends Controller
         return response(["created" => true]);
     }
 
-    public function update(Request $request, Place $place): Response
+    public function update(UpdatePlaceRequest $request, Place $place): Response
     {
         $place->update($request->all());
         return response(["updated" => true]);
