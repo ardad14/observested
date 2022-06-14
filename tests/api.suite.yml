@@ -1,0 +1,13 @@
+actor: ApiTester
+modules:
+    enabled:
+        - \Helper\Api
+        - REST:
+            url: http://localhost/api/
+            depends: Laravel5
+        - Db:
+            dsn: 'mysql:host=observested-db;dbname=Observested'
+            user: 'root'
+            password: 'root'
+            dump:
+              - 'tests/_data/dump.sql'
