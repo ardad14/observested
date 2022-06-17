@@ -23,9 +23,9 @@ use App\Services\ClientService;
 | contains the "web" middleware group. Now create something great!
 |
 */
-/*Route::get('/', fn() => view('main'));
+Route::get('/', fn() => view('main'));
 
-Route::group(['prefix' => 'analytics'], function () {
+/*Route::group(['prefix' => 'analytics'], function () {
     Route::get('/general', fn() => view('analyticsGeneral', [
         'actions' => AnalyticsService::getAllActionsForPlace(),
     ]));
