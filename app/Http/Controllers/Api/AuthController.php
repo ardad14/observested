@@ -45,7 +45,6 @@ class AuthController extends Controller
 
         return response()->json([
             'userId' => Auth::id(),
-            'token_type' => 'Bearer',
             'role' => $user->role,
             'token' => $token->accessToken,
             'expires_at' => Carbon::parse($token->token->expires_at)->toDateTimeString()

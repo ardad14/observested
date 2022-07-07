@@ -6,15 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CreatePlaceRequest;
 use App\Http\Requests\Api\UpdatePlaceRequest;
 use App\Models\Place;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
 
 class PlaceController extends Controller
 {
     public function show(Place $place): Response
     {
-        return response(["place" => $place]);
+        return response($place);
     }
 
     public function store(CreatePlaceRequest $request): Response
@@ -52,7 +51,7 @@ class PlaceController extends Controller
             $q->where('user_id', $user['id']);
         })->get();
 
-        return response(["places" => $places]);
+        return response($places);
     }
 
     public function getFirstPlaceForUser(): Response
@@ -63,6 +62,6 @@ class PlaceController extends Controller
             $q->where('user_id', $user['id']);
         })->first();
 
-        return response(["place" => $place]);
+        return response($place);
     }
 }

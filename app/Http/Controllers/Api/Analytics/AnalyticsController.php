@@ -5,16 +5,13 @@ namespace App\Http\Controllers\Api\Analytics;
 use App\Http\Controllers\Controller;
 use App\Models\Place;
 use App\Models\Product;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpFoundation\Response;
+
 
 class AnalyticsController extends Controller
 {
-    public function showGeneral(int $id): JsonResponse
+    public function showGeneral(int $id): Response
     {
         $admin = Auth::user();
 
@@ -29,15 +26,10 @@ class AnalyticsController extends Controller
             ->with('customers')
             ->first();
 
-        return response()->json(
-            [
-                "actions" => $allActions
-            ],
-            Response::HTTP_OK
-        );
+        return response($allActions);
     }
 
-    public function getAllProductsForPlace(int $id): JsonResponse
+    public function getAllProductsForPlace(int $id): Response
     {
         $admin = Auth::user();
 
@@ -47,11 +39,6 @@ class AnalyticsController extends Controller
 
         $products = Product::where('place_id', $place->id)->get();
 
-        return response()->json(
-            [
-                "products" => $products
-            ],
-            Response::HTTP_OK
-        );
+        return response($products);
     }
 }

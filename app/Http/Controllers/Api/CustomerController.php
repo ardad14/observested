@@ -5,15 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Place;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class CustomerController extends Controller
 {
-    public function customersForPlace(): JsonResponse
+    public function customersForPlace(): Response
     {
         $admin = Auth::user();
 
@@ -25,11 +22,6 @@ class CustomerController extends Controller
             $q->where('place_id', $place->id);
         })->get();
 
-        return response()->json(
-            [
-                "customers" => $customersPlace
-            ],
-            Response::HTTP_OK
-        );
+        return response($customersPlace);
     }
 }
