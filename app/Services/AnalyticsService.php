@@ -13,8 +13,6 @@ class AnalyticsService
 {
     public function showGeneral(int $id)
     {
-        $admin = Auth::user();
-
         $place = Place::findOrFail($id);
 
         $allActions = Place::select('*')
