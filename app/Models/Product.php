@@ -14,8 +14,9 @@ class Product extends Model
         'name',
         'purchase',
         'price',
-        'availableAmount',
+        'available_amount',
         'sold',
+        'place_id',
     ];
 
     /**

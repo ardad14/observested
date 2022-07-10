@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\PlaceController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\IoT\IoTController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,3 +43,9 @@ Route::group(['prefix' => 'customers', 'middleware' => 'auth:api'], function () 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
+
+Route::group(['prefix' => 'iot'], function () {
+    Route::post('/userOrder', [IoTController::class, 'userMakeOrder']);
+    Route::post('/productOrder', [IoTController::class, 'productOrder']);
+    Route::post('/createCustomer', [IoTController::class, 'createCustomer']);
+});
