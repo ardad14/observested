@@ -15,7 +15,7 @@ class IoTController extends Controller
         $data = $request->only(['customerId', 'placeId', 'spendMoney']);
         $this->dispatch(new UserMakeOrder($data['customerId'], $data['placeId'], $data['spendMoney']));
 
-        response(true);
+        return response(true);
     }
 
     public function productOrder(Request $request)
@@ -23,7 +23,7 @@ class IoTController extends Controller
         $data = $request->only(['productId', 'placeId', 'amount']);
         $this->dispatch(new ProductMakeOrder($data['productId'], $data['placeId'], $data['amount']));
 
-        response(true);
+        return response(true);
     }
 
     public function createCustomer(Request $request)
@@ -31,6 +31,6 @@ class IoTController extends Controller
         $data = $request->only(['name', 'surname', 'age']);
         $this->dispatch(new CreateCustomer($data['name'], $data['surname'], $data['age']));
 
-        response(true);
+        return response(true);
     }
 }

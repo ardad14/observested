@@ -6,62 +6,39 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CreatePlaceRequest;
 use App\Http\Requests\Api\UpdatePlaceRequest;
 use App\Models\Place;
+use App\Services\PlaceService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 
 class PlaceController extends Controller
 {
-    public function show(Place $place): Response
+    public function show(Place $place, PlaceService $placeService): Response
     {
-        return response($place);
+        return response($placeService->show($place));
     }
 
-    public function store(CreatePlaceRequest $request): Response
+    public function store(CreatePlaceRequest $request, PlaceService $placeService): Response
     {
-        $user = Auth::user();
-
-        $place = Place::create($request->all());
-        $place->users()->save(
-            $user,
-            [
-                'role' => 'admin'
-            ]
-        );
-
-        return response(["created" => true]);
+        return response($placeService->store($request));
     }
 
-    public function update(UpdatePlaceRequest $request, Place $place): Response
+    public function update(UpdatePlaceRequest $request, Place $place, PlaceService $placeService): Response
     {
-        $place->update($request->all());
-        return response(["updated" => true]);
+        return response($placeService->update($request, $place));
     }
 
-    public function delete(Place $place): Response
+    public function delete(Place $place, PlaceService $placeService): Response
     {
-        Place::destroy($place->id);
-        return response(['delete' => true]);
+        return response($placeService->delete($place));
     }
 
-    public function getPlacesForUser(): Response
+    public function getPlacesForUser(PlaceService $placeService): Response
     {
-        $user = Auth::user();
-
-        $places = Place::whereHas('users', function ($q) use ($user) {
-            $q->where('user_id', $user['id']);
-        })->get();
-
-        return response($places);
+        return response($placeService->getPlacesForUser());
     }
 
-    public function getFirstPlaceForUser(): Response
+    public function getFirstPlaceForUser(PlaceService $placeService): Response
     {
-        $user = Auth::user();
-
-        $place = Place::whereHas('users', function ($q) use ($user) {
-            $q->where('user_id', $user['id']);
-        })->first();
-
-        return response($place);
+        return response($placeService->getFirstPlaceForUser());
     }
 }

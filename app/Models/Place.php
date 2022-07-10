@@ -14,6 +14,8 @@ class Place extends Model
     protected $fillable = [
         'name',
         'address',
+        'latitude',
+        'longitude',
         'working_hours_start',
         'working_hours_end',
     ];

@@ -2,43 +2,39 @@
 
 namespace App\Services;
 
+use App\Models\Place;
+use App\Models\Product;
 use App\Models\User;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AnalyticsService
 {
-    public static function getAllActionsForPlace(): string
+    public function showGeneral(int $id)
     {
-        $admin = User::find(session()->get('userId'));
-        $place = DB::table('users_places')
-            ->where('user_id', $admin->id)
+        $admin = Auth::user();
+
+        $place = Place::findOrFail($id);
+
+        $allActions = Place::select('*')
+            ->where('id', $place->id)
+            ->with('customers')
             ->first();
 
-        $actions =  DB::select('select
-                                    clients_places.id,
-                                    clients_places.client_id,
-                                    clients_places.place_id,
-                                    clients_places.spend_money,
-                                    clients_places.created_at,
-                                    clients.id,
-                                    clients.age
-                                from clients_places, clients
-                                where clients_places.place_id = ? and clients.id = clients_places.client_id',
-            [$place->place_id]
-        );
-
-        return json_encode($actions);
+        return $allActions;
     }
 
-    public static function getAllProductsForPlace(): bool|string
+    public function getAllProductsForPlace(int $id)
     {
-        $admin = User::find(session()->get('userId'));
-        $place = DB::table('users_places')
-            ->where('user_id', $admin->id)
-            ->first();
-        $products =  json_encode(DB::table('products')
-            ->where('place_id', $place->place_id)
-            ->get());
+        $admin = Auth::user();
+
+        $place = Place::whereHas('users', function ($q) use ($admin) {
+            $q->where('user_id', $admin['id']);
+        })->first();
+
+        $products = Product::where('place_id', $place->id)->get();
+
         return $products;
     }
 }

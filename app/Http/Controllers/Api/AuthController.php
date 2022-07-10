@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterFormRequest;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -13,50 +14,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    public function register(RegisterFormRequest $request)
+    public function register(RegisterFormRequest $request, UserService $userService)
     {
-        $user = User::create(array_merge(
-            $request->only('name', 'surname', 'email', 'phone'),
-            ['password' => bcrypt($request->password)],
-        ));
-
-        return response([
-            'message' => 'You were successfully registered. Use your email and password to sign in.'
-        ]);
+        return response($userService->register($request));
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request, UserService $userService)
     {
-        $user = $request->all();
-        $credentials = $request->only('email', 'password');
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'You cannot sign with those credentials',
-                'errors' => 'Unauthorised'
-            ], 401);
-        }
-
-        $token = Auth::user()->createToken(config('app.name'));
-
-        $token->token->expires_at = Carbon::now()->addDay();
-        $token->token->save();
-
-        $user = Auth::user();
-
-        return response()->json([
-            'userId' => Auth::id(),
-            'role' => $user->role,
-            'token' => $token->accessToken,
-            'expires_at' => Carbon::parse($token->token->expires_at)->toDateTimeString()
-        ], 200);
+        $result = $userService->login($request);
+        return response($result, $result['code']);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request, UserService $userService)
     {
-        $request->user()->token()->revoke();
-
-        return response()->json([
-            'message' => 'You are successfully logged out',
-        ]);
+        return response($userService->logout($request));
     }
 }

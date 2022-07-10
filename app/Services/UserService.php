@@ -2,136 +2,78 @@
 
 namespace App\Services;
 
-use App\Http\Requests\SignUpRequest;
+use App\Http\Requests\Api\Auth\LoginRequest;
+use App\Http\Requests\Api\Auth\RegisterFormRequest;
 use App\Models\Place;
 use App\Models\User;
-use App\Http\Requests\SignInRequest;
-use App\Models\UserPlaces;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Laravel\Socialite\Facades\Socialite;
 
 class UserService
 {
-    /**
-     * Sign in new user
-     *
-     * @param SignInRequest $request
-     */
-    public static function signIn(Request $request): bool
+    public function getUsersForPlace()
     {
-        $place = DB::table('places')
-                    ->where('name', $request['place'])
-                    ->first();
+        $admin = Auth::user();
 
-        DB::table('users')->insert([
-            'name' => $request['name'],
-            'surname' => $request['surname'],
-            'email' => $request['email'],
-            'password' => $request['password'],
-            'place_id' =>$place->id,
-            'role' => $request['role'],
-        ]);
-        header("Location: /signUp");
+        $place = Place::whereHas('users', function ($q) use ($admin) {
+            $q->where('user_id', $admin['id']);
+        })->first();
 
-        return true;
+        $userPlace = User::whereHas('places', function ($q) use ($place) {
+            $q->where('place_id', $place->id);
+        })->get();
+
+        return $userPlace;
     }
 
-    /**
-     * Sign up user
-     *
-     * @param SignUpRequest $request
-     */
-    public static function signUp(SignUpRequest $request): bool
+    public function register(RegisterFormRequest $request): array
     {
-        $userData = DB::table('users')
-            ->where('email', '=', $request['email'])
-            ->where('password', '=', $request['password'])
-            ->first();
-        if (is_object($userData)) {
-            session()->put('userId', $userData->id);
-            session()->put('place', $request['place']);
-            header("Location: /analytics/general");
-            return true;
-        }
-        header("Location: /signUp");
-        return true;
+        $user = User::create(array_merge(
+            $request->only('name', 'surname', 'email', 'phone'),
+            ['password' => bcrypt($request->password)],
+        ));
+
+        return [
+            'message' => 'You were successfully registered. Use your email and password to sign in.'
+        ];
     }
 
-    /**
-     * Return is user authorize or not
-     *
-     * @return bool
-     */
-    public static function isAuth(): bool
+    public function login(LoginRequest $request): array
     {
-        if(session()->get('userId') !== null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Log out user
-     */
-    public static function logOut(): bool
-    {
-        session()->pull('userId');
-        header("Location: /");
-        return true;
-    }
-
-    /**
-     * Return user that authorised now
-     *
-     * @return mixed
-     */
-    public static function getUserBySession()
-    {
-        return User::find(session()->get("userId"));
-    }
-
-    public static function getWorkersForPlace()
-    {
-        $admin = User::find(session()->get('userId'));
-        $place = DB::table('places')
-            ->where('name', session()->get('place'))
-            ->first();
-
-        $user_place = DB::table('users_places')
-            ->where('place_id', $place->id)
-            ->get();
-        $placesArray = array();
-
-        foreach ($user_place as $place)
-        {
-            $placesArray[] = $place->user_id;
+        $user = $request->all();
+        $credentials = $request->only('email', 'password');
+        if (!Auth::attempt($credentials)) {
+            return [
+                'message' => 'You cannot sign with those credentials',
+                'errors' => 'Unauthorised',
+                'code' => 401,
+            ];
         }
 
-        return json_encode(DB::table('users')
-            ->whereIn('id', $placesArray)
-            ->get());
+        $token = Auth::user()->createToken(config('app.name'));
+
+        $token->token->expires_at = Carbon::now()->addDay();
+        $token->token->save();
+
+        $user = Auth::user();
+
+        return [
+            'userId' => Auth::id(),
+            'role' => $user->role,
+            'token' => $token->accessToken,
+            'expires_at' => Carbon::parse($token->token->expires_at)->toDateTimeString(),
+            'code' => 200,
+        ];
     }
 
-    public static function addWorker(Request $request)
+    public function logout(Request $request): array
     {
-        $userByEmail = User::where('email', $request['email'])->first();
-        $admin = User::find(session()->get('userId'));
-        $place = DB::table('users_places')
-            ->where('user_id', $admin->id)
-            ->first();
+        $request->user()->token()->revoke();
 
-        if ($userByEmail !== null) {
-            DB::table("users_places")->insert([
-                'user_id' => $userByEmail->id,
-                'place_id' => $place->place_id,
-                'role' => $request['role']
-            ]);
-
-        }
-        header('location: /workers');
-        return true;
+        return [
+            'message' => 'You are successfully logged out',
+        ];
     }
 }

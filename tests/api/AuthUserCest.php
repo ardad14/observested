@@ -30,7 +30,6 @@ class AuthUserCest
         ]);
         $I->seeResponseContainsJson([
             'userId' => 1,
-            'token_type' => 'Bearer',
             'role' => 'admin',
         ]);
         $I->canSeeResponseCodeIs(200);

@@ -50,6 +50,8 @@ class PlaceCest
         $I->sendPost('/place', [
             'name' => $this->faker->name(),
             'address' => $this->faker->address(),
+            'latitude' => $this->faker->latitude(),
+            'longitude' => $this->faker->longitude(),
             'working_hours_start' => '08:00',
             'working_hours_end' => '19:00',
         ]);
